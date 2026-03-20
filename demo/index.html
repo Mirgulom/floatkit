@@ -56,7 +56,26 @@ h1.title em { font-style:normal; color:#7c3aed; }
   max-width: 480px;
   line-height: 1.65;
   font-weight: 300;
-  margin-bottom: 48px;
+  margin-bottom: 18px;
+}
+
+.hdr-actions { margin-bottom: 36px; }
+.hdr-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(124,58,237,0.4);
+  background: rgba(124,58,237,0.2);
+  color: #c4b5fd;
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.14s;
+}
+.hdr-btn:hover {
+  background: rgba(124,58,237,0.32);
+  border-color: rgba(124,58,237,0.7);
 }
 
 /* ---- Panel ---- */
@@ -298,9 +317,12 @@ h1.title em { font-style:normal; color:#7c3aed; }
 
   <!-- Header -->
   <div>
-    <div class="hdr-badge"><span class="hdr-dot"></span> FloatKit v2.0 — CodeCanyon</div>
+    <div class="hdr-badge"><span class="hdr-dot"></span> FloatKit v2.0</div>
     <h1 class="title">Float<em>Kit</em><br>Social Widget</h1>
     <p class="subtitle">Plug-and-play floating sidebar. Pick your icons, theme, position — see the live preview and copy the code.</p>
+    <div class="hdr-actions">
+      <a class="hdr-btn" href="../documentation/index.html">Open Documentation</a>
+    </div>
   </div>
 
   <!-- PANEL 1: Style controls -->
