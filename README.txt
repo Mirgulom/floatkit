@@ -1,8 +1,6 @@
-FloatKit v2.0
+FloatKit
 Floating Social Sidebar Widget
 
-License
-- CodeCanyon Regular / Extended License
 
 Package Structure
 floatkit/
