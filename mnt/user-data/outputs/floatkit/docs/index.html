@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FloatKit — Documentation</title>
+<meta name="description" content="FloatKit v2.0 — Floating social sidebar widget. Zero dependencies, 6 themes, 21 networks.">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0b0b15;
+  --bg2: #111120;
+  --bg3: rgba(255,255,255,0.03);
+  --border: rgba(255,255,255,0.07);
+  --text: #e8e8f0;
+  --muted: rgba(255,255,255,0.4);
+  --purple: #7c3aed;
+  --purple-light: #a78bfa;
+  --purple-glow: rgba(124,58,237,0.18);
+  --green: #4ade80;
+  --code-bg: rgba(0,0,0,0.5);
+  --sidebar-w: 260px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+/* ---- LAYOUT ---- */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ---- SIDEBAR ---- */
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  overflow-y: auto;
+  z-index: 100;
+}
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.3); border-radius: 3px; }
+
+.sidebar-logo {
+  padding: 24px 20px 18px;
+  border-bottom: 1px solid var(--border);
+}
+.logo-name {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.logo-name span { color: var(--purple); }
+.logo-ver {
+  display: inline-block;
+  background: var(--purple-glow);
+  border: 1px solid rgba(124,58,237,0.3);
+  color: var(--purple-light);
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 100px;
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+}
+
+.nav-section {
+  padding: 18px 0 8px;
+}
+.nav-label {
+  padding: 0 20px 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.25);
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: all 0.13s;
+}
+.nav-link:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.03); }
+.nav-link.active { color: var(--purple-light); border-left-color: var(--purple); background: var(--purple-glow); }
+.nav-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; opacity: 0.6; }
+
+.sidebar-bottom {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+.ext-link {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--muted);
+  text-decoration: none; padding: 6px 0;
+  transition: color 0.13s;
+}
+.ext-link:hover { color: rgba(255,255,255,0.75); }
+
+/* ---- MAIN ---- */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  max-width: 860px;
+  padding: 56px 52px 120px;
+}
+
+/* ---- SECTIONS ---- */
+.section { margin-bottom: 72px; }
+
+.section-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--purple-glow);
+  border: 1px solid rgba(124,58,237,0.28);
+  border-radius: 100px;
+  padding: 4px 12px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--purple-light);
+  margin-bottom: 14px;
+}
+
+h1.page-title {
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+h1.page-title em { font-style: normal; color: var(--purple); }
+
+.page-lead {
+  font-size: 17px;
+  color: var(--muted);
+  max-width: 560px;
+  line-height: 1.7;
+  margin-bottom: 36px;
+}
+
+h2.sec-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+  color: #fff;
+  padding-top: 8px;
+}
+
+h3.sub-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.8);
+  margin: 24px 0 10px;
+}
+
+p { color: rgba(255,255,255,0.6); margin-bottom: 14px; line-height: 1.7; }
+p:last-child { margin-bottom: 0; }
+
+/* ---- DIVIDER ---- */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 56px 0;
+}
+
+/* ---- STEP LIST ---- */
+.steps { display: flex; flex-direction: column; gap: 20px; margin: 24px 0; }
+
+.step {
+  display: flex; gap: 18px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 22px;
+}
+.step-num {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--purple-glow);
+  border: 1px solid rgba(124,58,237,0.35);
+  color: var(--purple-light);
+  font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.step-body h4 { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+.step-body p  { font-size: 13px; color: var(--muted); margin: 0; }
+
+/* ---- CODE BLOCKS ---- */
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 0;
+  margin: 16px 0;
+  overflow: hidden;
+  position: relative;
+}
+.code-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.code-lang {
+  font-size: 11px; color: rgba(255,255,255,0.3);
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+.code-copy-btn {
+  background: none; border: none;
+  color: rgba(255,255,255,0.35); font-size: 11px;
+  cursor: pointer; font-family: inherit;
+  padding: 3px 8px; border-radius: 5px;
+  transition: all 0.13s;
+}
+.code-copy-btn:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.7); }
+pre {
+  padding: 18px 20px;
+  font-family: 'Fira Code', 'SF Mono', 'Courier New', monospace;
+  font-size: 13px; line-height: 1.75;
+  overflow-x: auto;
+  color: rgba(255,255,255,0.7);
+  white-space: pre;
+}
+.t-cmt  { color: rgba(255,255,255,0.25); font-style: italic; }
+.t-key  { color: #c4b5fd; }
+.t-str  { color: #86efac; }
+.t-val  { color: #fde68a; }
+.t-tag  { color: #67e8f9; }
+.t-fn   { color: #f9a8d4; }
+
+/* Inline code */
+code {
+  font-family: 'Fira Code', 'SF Mono', monospace;
+  font-size: 12.5px;
+  background: rgba(124,58,237,0.12);
+  border: 1px solid rgba(124,58,237,0.22);
+  color: #c4b5fd;
+  padding: 2px 7px;
+  border-radius: 5px;
+}
+
+/* ---- TABLE ---- */
+.tbl-wrap { overflow-x: auto; margin: 18px 0; border-radius: 12px; border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: rgba(255,255,255,0.04); }
+th {
+  padding: 11px 16px;
+  text-align: left; font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.35);
+  font-weight: 500;
+}
+td {
+  padding: 11px 16px;
+  font-size: 13px; color: rgba(255,255,255,0.6);
+  border-top: 1px solid var(--border);
+}
+td:first-child { color: var(--purple-light); font-family: 'Fira Code', monospace; font-size: 12px; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* ---- CHIPS / BADGES ---- */
+.badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+.badge {
+  padding: 5px 12px; border-radius: 100px;
+  font-size: 12px; font-weight: 500;
+}
+.badge-purple { background: var(--purple-glow); border: 1px solid rgba(124,58,237,0.3); color: var(--purple-light); }
+.badge-green  { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.25); color: #4ade80; }
+.badge-gray   { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--muted); }
+
+/* ---- CALLOUT ---- */
+.callout {
+  display: flex; gap: 14px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+.callout-info    { background: rgba(99,179,237,0.07); border: 1px solid rgba(99,179,237,0.2); }
+.callout-warning { background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.2); }
+.callout-success { background: rgba(74,222,128,0.07); border: 1px solid rgba(74,222,128,0.2); }
+.callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.callout p { margin: 0; font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+.callout p strong { color: rgba(255,255,255,0.85); }
+
+/* ---- NETWORK GRID ---- */
+.net-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px; margin: 16px 0;
+}
+.net-item {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 9px; padding: 9px 12px;
+  font-size: 12px; color: var(--muted);
+}
+.net-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* ---- MOBILE ---- */
+.hamburger {
+  display: none;
+  position: fixed; top: 14px; left: 14px;
+  z-index: 200;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 9px; padding: 8px 10px;
+  cursor: pointer; color: var(--muted); font-size: 16px;
+}
+@media (max-width: 768px) {
+  .hamburger { display: block; }
+  .sidebar { transform: translateX(-100%); transition: transform 0.25s; }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; padding: 56px 20px 80px; }
+}
+</style>
+</head>
+<body>
+
+<button class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+<!-- SIDEBAR -->
+<div class="layout">
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-name">Float<span>Kit</span></div>
+    <div class="logo-ver">v2.0.0</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Getting Started</div>
+    <a href="#intro"     class="nav-link active"><span class="nav-dot"></span>Introduction</a>
+    <a href="#install"   class="nav-link"><span class="nav-dot"></span>Installation</a>
+    <a href="#quickstart" class="nav-link"><span class="nav-dot"></span>Quick Start</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Configuration</div>
+    <a href="#options"   class="nav-link"><span class="nav-dot"></span>All Options</a>
+    <a href="#themes"    class="nav-link"><span class="nav-dot"></span>Themes</a>
+    <a href="#positions" class="nav-link"><span class="nav-dot"></span>Positions</a>
+    <a href="#networks"  class="nav-link"><span class="nav-dot"></span>Networks</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Features</div>
+    <a href="#blur"      class="nav-link"><span class="nav-dot"></span>Blur Effect</a>
+    <a href="#badges"    class="nav-link"><span class="nav-dot"></span>Count Badges</a>
+    <a href="#mobile"    class="nav-link"><span class="nav-dot"></span>Mobile</a>
+    <a href="#api"       class="nav-link"><span class="nav-dot"></span>JavaScript API</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Advanced</div>
+    <a href="#wordpress" class="nav-link"><span class="nav-dot"></span>WordPress</a>
+    <a href="#examples"  class="nav-link"><span class="nav-dot"></span>Examples</a>
+    <a href="#faq"       class="nav-link"><span class="nav-dot"></span>FAQ</a>
+  </div>
+
+  <div style="flex:1"></div>
+  <div class="sidebar-bottom">
+    <a class="ext-link" href="../floatkit-v2.html" target="_blank">▶ Live Demo</a>
+    <a class="ext-link" href="https://codecanyon.net" target="_blank">🛒 CodeCanyon</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- INTRO -->
+  <section class="section" id="intro">
+    <div class="section-badge">● Documentation</div>
+    <h1 class="page-title">Float<em>Kit</em><br>v2.0 Docs</h1>
+    <p class="page-lead">A lightweight floating social sidebar widget. Drop two files into any website and get animated social buttons — no frameworks, no jQuery, no build tools.</p>
+
+    <div class="badge-row">
+      <span class="badge badge-green">Zero Dependencies</span>
+      <span class="badge badge-purple">6 Themes</span>
+      <span class="badge badge-purple">6 Positions</span>
+      <span class="badge badge-purple">21 Networks</span>
+      <span class="badge badge-gray">~5kb minified</span>
+      <span class="badge badge-gray">IE11+</span>
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">💡</span>
+      <p>Use the <strong>Live Configurator</strong> on the demo page to visually pick your settings, then copy the generated code directly into your project.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- INSTALLATION -->
+  <section class="section" id="install">
+    <h2 class="sec-title">Installation</h2>
+    <p>FloatKit ships as two files. Copy them into your project — that's all you need.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Download the package</h4>
+          <p>After purchase on CodeCanyon, unzip the archive. You'll find <code>floatkit.css</code> and <code>floatkit.js</code> in the <code>/dist</code> folder.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Copy files to your project</h4>
+          <p>Place both files anywhere in your project, e.g. <code>/assets/floatkit/</code>. No npm, no webpack, no build step required.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Link in your HTML</h4>
+          <p>Add the CSS in <code>&lt;head&gt;</code> and the JS before <code>&lt;/body&gt;</code>. Then call <code>FloatKit.init()</code>.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-title">Package contents</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">file structure</span></div>
+      <pre>floatkit/
+├── dist/
+│   ├── floatkit.css        <span class="t-cmt">← core styles</span>
+│   ├── floatkit.min.css    <span class="t-cmt">← minified (use in production)</span>
+│   ├── floatkit.js         <span class="t-cmt">← core engine</span>
+│   └── floatkit.min.js     <span class="t-cmt">← minified (use in production)</span>
+├── demo/
+│   └── index.html          <span class="t-cmt">← live configurator</span>
+├── documentation/
+│   └── index.html          <span class="t-cmt">← this file</span>
+└── README.txt</pre>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- QUICK START -->
+  <section class="section" id="quickstart">
+    <h2 class="sec-title">Quick Start</h2>
+    <p>Minimum setup — get running in under 2 minutes.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">html</span>
+        <button class="code-copy-btn" onclick="copyBlock(this)">Copy</button>
+      </div>
+      <pre><span class="t-cmt">&lt;!-- In &lt;head&gt; --&gt;</span>
+<span class="t-tag">&lt;link</span> <span class="t-key">rel</span>=<span class="t-str">"stylesheet"</span> <span class="t-key">href</span>=<span class="t-str">"floatkit.min.css"</span><span class="t-tag">&gt;</span>
+
+<span class="t-cmt">&lt;!-- In &lt;body&gt; — widget container --&gt;</span>
+<span class="t-tag">&lt;div</span> <span class="t-key">id</span>=<span class="t-str">"floatkit-widget"</span><span class="t-tag">&gt;&lt;/div&gt;</span>
+
+<span class="t-cmt">&lt;!-- Before &lt;/body&gt; --&gt;</span>
+<span class="t-tag">&lt;script</span> <span class="t-key">src</span>=<span class="t-str">"floatkit.min.js"</span><span class="t-tag">&gt;&lt;/script&gt;</span>
+<span class="t-tag">&lt;script&gt;</span>
+<span class="t-fn">FloatKit</span>.init({
+  <span class="t-key">position</span>: <span class="t-str">'left'</span>,
+  <span class="t-key">theme</span>:    <span class="t-str">'solid'</span>,
+  <span class="t-key">networks</span>: [
+    { <span class="t-key">id</span>: <span class="t-str">'facebook'</span>,  <span class="t-key">url</span>: <span class="t-str">'https://facebook.com/yourpage'</span> },
+    { <span class="t-key">id</span>: <span class="t-str">'instagram'</span>, <span class="t-key">url</span>: <span class="t-str">'https://instagram.com/yourhandle'</span> },
+    { <span class="t-key">id</span>: <span class="t-str">'twitter'</span>,   <span class="t-key">url</span>: <span class="t-str">'https://x.com/yourhandle'</span> }
+  ]
+});
+<span class="t-tag">&lt;/script&gt;</span></pre>
+    </div>
+
+    <div class="callout callout-success">
+      <span class="callout-icon">✓</span>
+      <p>That's it. The widget will appear on the left side of the page and auto-adapts to mobile screens.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- OPTIONS -->
+  <section class="section" id="options">
+    <h2 class="sec-title">All Options</h2>
+    <p>Pass any of these to <code>FloatKit.init({})</code>. All fields are optional except <code>networks</code>.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>container</td><td>string</td><td>'#floatkit-widget'</td><td>CSS selector for the mount point</td></tr>
+          <tr><td>position</td><td>string</td><td>'left'</td><td>Widget position. See Positions section</td></tr>
+          <tr><td>theme</td><td>string</td><td>'solid'</td><td>Visual theme. See Themes section</td></tr>
+          <tr><td>shape</td><td>string</td><td>'rounded'</td><td>Button shape: rounded | circle | sharp | square</td></tr>
+          <tr><td>size</td><td>string</td><td>'md'</td><td>Button size: sm | md | lg | xl</td></tr>
+          <tr><td>blur</td><td>boolean</td><td>false</td><td>Enable out-of-focus blur effect on hover</td></tr>
+          <tr><td>showLabels</td><td>boolean</td><td>true</td><td>Show tooltip labels on hover</td></tr>
+          <tr><td>hideMobile</td><td>boolean</td><td>false</td><td>Hide widget on screens &lt; 768px</td></tr>
+          <tr><td>mobileMoveBottom</td><td>boolean</td><td>true</td><td>Auto-move to bottom bar on mobile</td></tr>
+          <tr><td>scrollHide</td><td>boolean</td><td>false</td><td>Hide widget when user is near top of page</td></tr>
+          <tr><td>scrollHideOffset</td><td>number</td><td>100</td><td>px from top to trigger scroll-hide</td></tr>
+          <tr><td>networks</td><td>array</td><td>—</td><td>Array of network objects (required)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-title">Network object fields</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>id</td><td>string</td><td>Yes</td><td>Network identifier (see Networks list)</td></tr>
+          <tr><td>url</td><td>string</td><td>Yes</td><td>Full URL to your profile or page</td></tr>
+          <tr><td>label</td><td>string</td><td>No</td><td>Custom tooltip text (overrides default)</td></tr>
+          <tr><td>count</td><td>string</td><td>No</td><td>Badge text, e.g. '2.1k' or '1,234'</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- THEMES -->
+  <section class="section" id="themes">
+    <h2 class="sec-title">Themes</h2>
+    <p>Set the <code>theme</code> option to one of the values below.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Value</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>solid</td><td>Full brand colors per network. Best for colorful, vibrant sidebars</td></tr>
+          <tr><td>glass</td><td>Frosted glass look with backdrop blur. Great on image backgrounds</td></tr>
+          <tr><td>outline</td><td>Transparent with colored border per network. Clean and minimal</td></tr>
+          <tr><td>glow</td><td>Solid colors with neon glow shadow. Ideal for dark pages</td></tr>
+          <tr><td>minimal</td><td>Dark semi-transparent buttons. Works on any background</td></tr>
+          <tr><td>light</td><td>White buttons with subtle shadow. Best for light/white backgrounds</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">💡</span>
+      <p>Use the <strong>glass</strong> theme when you have a full-page background image. Use <strong>light</strong> theme for white or very light page backgrounds.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- POSITIONS -->
+  <section class="section" id="positions">
+    <h2 class="sec-title">Positions</h2>
+    <p>Set the <code>position</code> option to one of the values below.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Value</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>left</td><td>Centered on the left edge of the viewport (default)</td></tr>
+          <tr><td>right</td><td>Centered on the right edge of the viewport</td></tr>
+          <tr><td>top</td><td>Centered at the top of the viewport, horizontal layout</td></tr>
+          <tr><td>bottom</td><td>Centered at the bottom of the viewport, horizontal layout</td></tr>
+          <tr><td>bottom-left</td><td>Bottom-left corner</td></tr>
+          <tr><td>bottom-right</td><td>Bottom-right corner</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- NETWORKS -->
+  <section class="section" id="networks">
+    <h2 class="sec-title">Supported Networks</h2>
+    <p>Use these values as the <code>id</code> field in each network object.</p>
+
+    <div class="net-grid">
+      <div class="net-item"><span class="net-dot" style="background:#1877f2"></span>facebook</div>
+      <div class="net-item"><span class="net-dot" style="background:#e4405f"></span>instagram</div>
+      <div class="net-item"><span class="net-dot" style="background:#333"></span>twitter</div>
+      <div class="net-item"><span class="net-dot" style="background:#ff0000"></span>youtube</div>
+      <div class="net-item"><span class="net-dot" style="background:#0a66c2"></span>linkedin</div>
+      <div class="net-item"><span class="net-dot" style="background:#2ca5e0"></span>telegram</div>
+      <div class="net-item"><span class="net-dot" style="background:#25d366"></span>whatsapp</div>
+      <div class="net-item"><span class="net-dot" style="background:#111"></span>tiktok</div>
+      <div class="net-item"><span class="net-dot" style="background:#e60023"></span>pinterest</div>
+      <div class="net-item"><span class="net-dot" style="background:#5865f2"></span>discord</div>
+      <div class="net-item"><span class="net-dot" style="background:#24292e"></span>github</div>
+      <div class="net-item"><span class="net-dot" style="background:#ff4500"></span>reddit</div>
+      <div class="net-item"><span class="net-dot" style="background:#fffc00; border:1px solid #ccc"></span>snapchat</div>
+      <div class="net-item"><span class="net-dot" style="background:#9146ff"></span>twitch</div>
+      <div class="net-item"><span class="net-dot" style="background:#1db954"></span>spotify</div>
+      <div class="net-item"><span class="net-dot" style="background:#1769ff"></span>behance</div>
+      <div class="net-item"><span class="net-dot" style="background:#ea4c89"></span>dribbble</div>
+      <div class="net-item"><span class="net-dot" style="background:#111"></span>medium</div>
+      <div class="net-item"><span class="net-dot" style="background:#1ab7ea"></span>vimeo</div>
+      <div class="net-item"><span class="net-dot" style="background:#f50"></span>soundcloud</div>
+      <div class="net-item"><span class="net-dot" style="background:#ea4335"></span>email</div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- BLUR -->
+  <section class="section" id="blur">
+    <h2 class="sec-title">Blur Effect</h2>
+    <p>When <code>blur: true</code>, hovering over one button causes all others to blur and fade out — keeping visual focus on the active button. Inspired by Socialsider's out-of-focus feature.</p>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">javascript</span><button class="code-copy-btn" onclick="copyBlock(this)">Copy</button></div>
+      <pre><span class="t-fn">FloatKit</span>.init({
+  <span class="t-key">blur</span>: <span class="t-val">true</span>,   <span class="t-cmt">// ← enable blur effect</span>
+  <span class="t-key">theme</span>: <span class="t-str">'solid'</span>,
+  <span class="t-key">networks</span>: [...]
+});</pre>
+    </div>
+
+    <p>You can also toggle it dynamically after init using the JS API: <code>widget.setBlur(true)</code></p>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- BADGES -->
+  <section class="section" id="badges">
+    <h2 class="sec-title">Count Badges</h2>
+    <p>Each network can display a small red badge with a follower count or custom text.</p>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">javascript</span><button class="code-copy-btn" onclick="copyBlock(this)">Copy</button></div>
+      <pre><span class="t-key">networks</span>: [
+  {
+    <span class="t-key">id</span>:    <span class="t-str">'facebook'</span>,
+    <span class="t-key">url</span>:   <span class="t-str">'https://facebook.com/yourpage'</span>,
+    <span class="t-key">count</span>: <span class="t-str">'12k'</span>    <span class="t-cmt">// ← shows badge with this text</span>
+  },
+  {
+    <span class="t-key">id</span>:    <span class="t-str">'instagram'</span>,
+    <span class="t-key">url</span>:   <span class="t-str">'https://instagram.com/handle'</span>
+    <span class="t-cmt">// no count = no badge</span>
+  }
+]</pre>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- MOBILE -->
+  <section class="section" id="mobile">
+    <h2 class="sec-title">Mobile Behavior</h2>
+    <p>FloatKit has two mobile options:</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Option</th><th>Behavior</th></tr></thead>
+        <tbody>
+          <tr><td>mobileMoveBottom: true</td><td>Widget moves to a centered bottom bar on screens &lt; 768px (default)</td></tr>
+          <tr><td>hideMobile: true</td><td>Widget is completely hidden on mobile screens</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <p>If both <strong>hideMobile</strong> and <strong>mobileMoveBottom</strong> are true, <strong>hideMobile</strong> wins — the widget will be hidden.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- JS API -->
+  <section class="section" id="api">
+    <h2 class="sec-title">JavaScript API</h2>
+    <p><code>FloatKit.init()</code> returns an API object you can use to update the widget after initialization.</p>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">javascript</span><button class="code-copy-btn" onclick="copyBlock(this)">Copy</button></div>
+      <pre><span class="t-cmt">// Save the returned instance</span>
+<span class="t-key">const</span> widget = <span class="t-fn">FloatKit</span>.init({ ... });
+
+<span class="t-cmt">// Change theme on the fly</span>
+widget.<span class="t-fn">setTheme</span>(<span class="t-str">'glass'</span>);
+
+<span class="t-cmt">// Move to different position</span>
+widget.<span class="t-fn">setPosition</span>(<span class="t-str">'right'</span>);
+
+<span class="t-cmt">// Change button shape</span>
+widget.<span class="t-fn">setShape</span>(<span class="t-str">'circle'</span>);
+
+<span class="t-cmt">// Change size</span>
+widget.<span class="t-fn">setSize</span>(<span class="t-str">'lg'</span>);
+
+<span class="t-cmt">// Toggle blur effect</span>
+widget.<span class="t-fn">setBlur</span>(<span class="t-val">true</span>);
+
+<span class="t-cmt">// Toggle hover labels</span>
+widget.<span class="t-fn">setLabels</span>(<span class="t-val">false</span>);
+
+<span class="t-cmt">// Swap network buttons dynamically</span>
+widget.<span class="t-fn">rebuild</span>([
+  { <span class="t-key">id</span>: <span class="t-str">'twitter'</span>, <span class="t-key">url</span>: <span class="t-str">'#'</span> },
+  { <span class="t-key">id</span>: <span class="t-str">'discord'</span>, <span class="t-key">url</span>: <span class="t-str">'#'</span> }
+]);
+
+<span class="t-cmt">// Remove widget from DOM</span>
+widget.<span class="t-fn">destroy</span>();</pre>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- WORDPRESS -->
+  <section class="section" id="wordpress">
+    <h2 class="sec-title">WordPress Integration</h2>
+    <p>To add FloatKit to a WordPress site, add the following to your theme's <code>functions.php</code>:</p>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">php — functions.php</span><button class="code-copy-btn" onclick="copyBlock(this)">Copy</button></div>
+      <pre><span class="t-fn">add_action</span>( <span class="t-str">'wp_enqueue_scripts'</span>, <span class="t-key">function</span>() {
+    wp_enqueue_style(
+        <span class="t-str">'floatkit'</span>,
+        get_template_directory_uri() . <span class="t-str">'/assets/floatkit.min.css'</span>
+    );
+    wp_enqueue_script(
+        <span class="t-str">'floatkit'</span>,
+        get_template_directory_uri() . <span class="t-str">'/assets/floatkit.min.js'</span>,
+        [], <span class="t-str">'2.0'</span>, <span class="t-val">true</span>
+    );
+} );
+
+<span class="t-fn">add_action</span>( <span class="t-str">'wp_footer'</span>, <span class="t-key">function</span>() {
+    <span class="t-key">echo</span> <span class="t-str">'&lt;div id="floatkit-widget"&gt;&lt;/div&gt;
+    &lt;script&gt;
+    FloatKit.init({
+        position: "left",
+        theme: "solid",
+        blur: false,
+        networks: [
+            { id: "facebook",  url: "https://facebook.com/yourpage" },
+            { id: "instagram", url: "https://instagram.com/yourhandle" },
+            { id: "twitter",   url: "https://x.com/yourhandle" }
+        ]
+    });
+    &lt;/script&gt;'</span>;
+} );</pre>
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">💡</span>
+      <p>Copy <code>floatkit.min.css</code> and <code>floatkit.min.js</code> to your theme's <code>/assets/</code> folder first.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- EXAMPLES -->
+  <section class="section" id="examples">
+    <h2 class="sec-title">Examples</h2>
+
+    <h3 class="sub-title">Dark page — Glow theme</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">javascript</span><button class="code-copy-btn" onclick="copyBlock(this)">Copy</button></div>
+      <pre><span class="t-fn">FloatKit</span>.init({
+  <span class="t-key">position</span>: <span class="t-str">'left'</span>,
+  <span class="t-key">theme</span>:    <span class="t-str">'glow'</span>,
+  <span class="t-key">shape</span>:    <span class="t-str">'circle'</span>,
+  <span class="t-key">size</span>:     <span class="t-str">'md'</span>,
+  <span class="t-key">blur</span>:     <span class="t-val">true</span>,
+  <span class="t-key">networks</span>: [
+    { <span class="t-key">id</span>: <span class="t-str">'instagram'</span>, <span class="t-key">url</span>: <span class="t-str">'#'</span>, <span class="t-key">count</span>: <span class="t-str">'5.2k'</span> },
+    { <span class="t-key">id</span>: <span class="t-str">'youtube'</span>,   <span class="t-key">url</span>: <span class="t-str">'#'</span>, <span class="t-key">count</span>: <span class="t-str">'1.8k'</span> },
+    { <span class="t-key">id</span>: <span class="t-str">'twitch'</span>,    <span class="t-key">url</span>: <span class="t-str">'#'</span> },
+    { <span class="t-key">id</span>: <span class="t-str">'discord'</span>,   <span class="t-key">url</span>: <span class="t-str">'#'</span> }
+  ]
+});</pre>
+    </div>
+
+    <h3 class="sub-title">Light corporate site</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">javascript</span><button class="code-copy-btn" onclick="copyBlock(this)">Copy</button></div>
+      <pre><span class="t-fn">FloatKit</span>.init({
+  <span class="t-key">position</span>:         <span class="t-str">'right'</span>,
+  <span class="t-key">theme</span>:            <span class="t-str">'light'</span>,
+  <span class="t-key">shape</span>:            <span class="t-str">'sharp'</span>,
+  <span class="t-key">showLabels</span>:       <span class="t-val">true</span>,
+  <span class="t-key">mobileMoveBottom</span>: <span class="t-val">true</span>,
+  <span class="t-key">networks</span>: [
+    { <span class="t-key">id</span>: <span class="t-str">'linkedin'</span>, <span class="t-key">url</span>: <span class="t-str">'#'</span> },
+    { <span class="t-key">id</span>: <span class="t-str">'twitter'</span>,  <span class="t-key">url</span>: <span class="t-str">'#'</span> },
+    { <span class="t-key">id</span>: <span class="t-str">'email'</span>,    <span class="t-key">url</span>: <span class="t-str">'mailto:<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ceb7a1bb8eabb6afa3bea2abe0ada1a3">[email&#160;protected]</a>'</span>,
+      <span class="t-key">label</span>: <span class="t-str">'Contact Us'</span> }
+  ]
+});</pre>
+    </div>
+
+    <h3 class="sub-title">Bottom bar for mobile-first site</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">javascript</span><button class="code-copy-btn" onclick="copyBlock(this)">Copy</button></div>
+      <pre><span class="t-fn">FloatKit</span>.init({
+  <span class="t-key">position</span>:    <span class="t-str">'bottom'</span>,
+  <span class="t-key">theme</span>:       <span class="t-str">'solid'</span>,
+  <span class="t-key">shape</span>:       <span class="t-str">'circle'</span>,
+  <span class="t-key">size</span>:        <span class="t-str">'sm'</span>,
+  <span class="t-key">showLabels</span>:  <span class="t-val">false</span>,
+  <span class="t-key">scrollHide</span>:  <span class="t-val">true</span>,
+  <span class="t-key">scrollHideOffset</span>: <span class="t-val">200</span>,
+  <span class="t-key">networks</span>: [
+    { <span class="t-key">id</span>: <span class="t-str">'facebook'</span>,  <span class="t-key">url</span>: <span class="t-str">'#'</span> },
+    { <span class="t-key">id</span>: <span class="t-str">'whatsapp'</span>,  <span class="t-key">url</span>: <span class="t-str">'https://wa.me/yourphone'</span> },
+    { <span class="t-key">id</span>: <span class="t-str">'telegram'</span>,  <span class="t-key">url</span>: <span class="t-str">'#'</span> }
+  ]
+});</pre>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <h2 class="sec-title">FAQ</h2>
+
+    <h3 class="sub-title">Does it work without jQuery?</h3>
+    <p>Yes. FloatKit is pure Vanilla JavaScript — no jQuery, no external libraries, no dependencies whatsoever.</p>
+
+    <h3 class="sub-title">Can I use multiple widgets on one page?</h3>
+    <p>Yes. Give each container a unique id and call <code>FloatKit.init()</code> separately for each, passing the matching <code>container</code> selector.</p>
+
+    <h3 class="sub-title">Can I add a custom network not in the list?</h3>
+    <p>Currently the widget supports the 21 built-in networks. Custom SVG icon support is planned for v2.1 via a <code>iconSvg</code> field in the network object.</p>
+
+    <h3 class="sub-title">The blur effect looks different on Safari</h3>
+    <p>The blur uses CSS <code>filter: blur()</code> which is fully supported in all modern browsers. Safari may render it slightly differently but it functions correctly.</p>
+
+    <h3 class="sub-title">How do I change button URLs after init?</h3>
+    <p>Use <code>widget.rebuild(networks)</code> — pass a new array of network objects. The widget will re-render with the new configuration.</p>
+
+    <h3 class="sub-title">Can I use this with React / Vue?</h3>
+    <p>Yes. Call <code>FloatKit.init()</code> inside a <code>useEffect</code> (React) or <code>mounted</code> (Vue) hook, and call <code>widget.destroy()</code> on component unmount to clean up.</p>
+  </section>
+
+</main>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function copyBlock(btn) {
+  var pre = btn.closest('.code-block').querySelector('pre');
+  var text = pre.textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    btn.textContent = 'Copied!';
+    setTimeout(function(){ btn.textContent = 'Copy'; }, 2000);
+  });
+}
+
+// Active nav link on scroll
+var sections = document.querySelectorAll('section[id]');
+var navLinks = document.querySelectorAll('.nav-link');
+window.addEventListener('scroll', function() {
+  var scrollY = window.scrollY + 100;
+  sections.forEach(function(sec) {
+    if (sec.offsetTop <= scrollY && sec.offsetTop + sec.offsetHeight > scrollY) {
+      navLink
